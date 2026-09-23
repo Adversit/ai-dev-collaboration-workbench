@@ -41,13 +41,28 @@ async function adminApi(request,env,user){
   }
   return json({error:'method_or_route_not_allowed'},405);
 }
+const safeId=id=>typeof id==='string'&&/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(id);
+const allowedNodeTypes=new Set(['problem','architecture','module','decision','plan','verification','risk','artifact']);
+const allowedNodeStatuses=new Set(['draft','review','verified','accepted']);
+const allowedEdgeTypes=new Set(['control','data','dependency','state']);
+const allowedAcceptanceStatuses=new Set(['unverified','passed','failed','manual']);
+const allowedAcceptanceKinds=new Set(['normal','boundary','exception','regression']);
 export function validState(data){
   if(!data||![2,3].includes(data.schema)||!Array.isArray(data.projects)||data.projects.length>200)return false;
   const ids=new Set();
   return data.projects.every(p=>{
-    if(!p||typeof p.id!=='string'||ids.has(p.id)||!Array.isArray(p.nodes)||!Array.isArray(p.edges)||p.nodes.length>5000||p.edges.length>20000)return false;
+    if(!p||!safeId(p.id)||ids.has(p.id)||!Array.isArray(p.nodes)||!Array.isArray(p.edges)||p.nodes.length>5000||p.edges.length>20000)return false;
+    if(p.camera!==undefined&&(!p.camera||!Number.isFinite(p.camera.x)||!Number.isFinite(p.camera.y)||!Number.isFinite(p.camera.z)||p.camera.z<=0))return false;
     ids.add(p.id);const nodes=new Set();
-    return p.nodes.every(n=>{if(!n||typeof n.id!=='string'||nodes.has(n.id)||!Number.isFinite(n.x)||!Number.isFinite(n.y))return false;nodes.add(n.id);return true;})&&p.edges.every(e=>e&&nodes.has(e.from)&&nodes.has(e.to));
+    return p.nodes.every(n=>{
+      if(!n||!safeId(n.id)||nodes.has(n.id)||!Number.isFinite(n.x)||!Number.isFinite(n.y))return false;
+      if(n.type!==undefined&&!allowedNodeTypes.has(n.type)||n.status!==undefined&&!allowedNodeStatuses.has(n.status))return false;
+      if(n.parentId!==undefined&&!safeId(n.parentId)||n.moduleLevel!==undefined&&!['container','leaf'].includes(n.moduleLevel))return false;
+      if(n.w!==undefined&&(!Number.isFinite(n.w)||n.w<=0)||n.h!==undefined&&(!Number.isFinite(n.h)||n.h<=0))return false;
+      if(n.acceptance!==undefined&&(!Array.isArray(n.acceptance)||n.acceptance.some(a=>!a||!safeId(a.id)||a.status!==undefined&&!allowedAcceptanceStatuses.has(a.status)||a.kind!==undefined&&!allowedAcceptanceKinds.has(a.kind))))return false;
+      nodes.add(n.id);return true;
+    })&&p.nodes.every(n=>n.parentId===undefined||nodes.has(n.parentId))
+      &&p.edges.every(e=>e&&nodes.has(e.from)&&nodes.has(e.to)&&(e.id===undefined||safeId(e.id))&&(e.type===undefined||allowedEdgeTypes.has(e.type)));
   });
 }
 export async function api(request,env){

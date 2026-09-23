@@ -134,8 +134,28 @@
     return files;
   }
   function validateStore(v){
-    if(!v||(v.schema!==2&&v.schema!==3)||!Array.isArray(v.projects)) return false;
-    return v.projects.every(p=>typeof p.id==='string'&&Array.isArray(p.nodes)&&Array.isArray(p.edges)&&p.nodes.every(n=>typeof n.id==='string'&&Number.isFinite(n.x)&&Number.isFinite(n.y)));
+    const safeId=id=>typeof id==='string'&&/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(id);
+    const nodeTypes=new Set(['problem','architecture','module','decision','plan','verification','risk','artifact']);
+    const statuses=new Set(['draft','review','verified','accepted']);
+    const edgeTypes=new Set(['control','data','dependency','state']);
+    const acceptanceStatuses=new Set(['unverified','passed','failed','manual']);
+    const acceptanceKinds=new Set(['normal','boundary','exception','regression']);
+    if(!v||(v.schema!==2&&v.schema!==3)||!Array.isArray(v.projects)||v.projects.length>200)return false;
+    const projectIds=new Set();
+    return v.projects.every(p=>{
+      if(!p||!safeId(p.id)||projectIds.has(p.id)||!Array.isArray(p.nodes)||!Array.isArray(p.edges)||p.nodes.length>5000||p.edges.length>20000)return false;
+      if(p.camera!==undefined&&(!p.camera||!Number.isFinite(p.camera.x)||!Number.isFinite(p.camera.y)||!Number.isFinite(p.camera.z)||p.camera.z<=0))return false;
+      projectIds.add(p.id);const nodeIds=new Set();
+      return p.nodes.every(n=>{
+        if(!n||!safeId(n.id)||nodeIds.has(n.id)||!Number.isFinite(n.x)||!Number.isFinite(n.y))return false;
+        if(n.type!==undefined&&!nodeTypes.has(n.type)||n.status!==undefined&&!statuses.has(n.status))return false;
+        if(n.parentId!==undefined&&!safeId(n.parentId)||n.moduleLevel!==undefined&&!['container','leaf'].includes(n.moduleLevel))return false;
+        if(n.w!==undefined&&(!Number.isFinite(n.w)||n.w<=0)||n.h!==undefined&&(!Number.isFinite(n.h)||n.h<=0))return false;
+        if(n.acceptance!==undefined&&(!Array.isArray(n.acceptance)||n.acceptance.some(a=>!a||!safeId(a.id)||a.status!==undefined&&!acceptanceStatuses.has(a.status)||a.kind!==undefined&&!acceptanceKinds.has(a.kind))))return false;
+        nodeIds.add(n.id);return true;
+      })&&p.nodes.every(n=>n.parentId===undefined||nodeIds.has(n.parentId))
+        &&p.edges.every(e=>e&&nodeIds.has(e.from)&&nodeIds.has(e.to)&&(e.id===undefined||safeId(e.id))&&(e.type===undefined||edgeTypes.has(e.type)));
+    });
   }
   root.ADCCore={snap,place,neighbors,deduplicate,fixture,evidence,validateCard,acceptanceStates,normalizeAcceptance,validateAcceptance,normalizeHierarchy,validateHierarchy,visibleNodeIds,projectEndpoint,projectEdges,buildDevelopmentPack,validateStore};
 })(globalThis);
