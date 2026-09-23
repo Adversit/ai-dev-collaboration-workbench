@@ -1,8 +1,16 @@
 # AI Development Collaboration
 
+[![打开在线站点](https://img.shields.io/badge/打开在线站点-AI%20Development%20Collaboration-4f6fde?style=for-the-badge)](https://ai-dev-collaboration-workbench.dingikang.chatgpt.site)
+
 一个用于人和 AI 协作开发的可视化工作台。它帮助使用者整理软件、Agent、产品、架构和 design-to-code 项目的当前状态，记录模块、决策、产物与验证证据，并在需要时生成可供开发 Agent 使用的项目资料。
 
-**在线站点：** [ai-dev-collaboration-workbench.dingikang.chatgpt.site](https://ai-dev-collaboration-workbench.dingikang.chatgpt.site)
+**在线站点：** [立即打开 AI Development Collaboration](https://ai-dev-collaboration-workbench.dingikang.chatgpt.site)
+
+## 站点展示
+
+![AI Development Collaboration 站点登录页](docs/assets/site-preview.jpg)
+
+> 截图展示站点的入口页面。登录后可以进入个人工作台，创建项目并使用画布、方法地图和验证记录。
 
 工作方法包含 Explore → Align → Specify → Decide → Plan → Execute → Verify → Converge → Learn 九个阶段。阶段可以按项目当前情况跳转、回退或并行，不要求每个项目从 Explore 开始。
 
