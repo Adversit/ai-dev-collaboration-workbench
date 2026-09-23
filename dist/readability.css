@@ -29,3 +29,45 @@ body .method-map strong{font-size:1rem}body .method-map span,body .method-detail
 body .toolbar-left{min-width:0;overflow-x:auto}body .toolbar-right{flex-shrink:0}
 @media(max-width:1100px){body .entry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body .entry-choice{min-height:190px}body .entry-section{min-height:auto}body .toolbar-right .stage-picker{display:none}}
 @media(max-width:700px){body .entry-grid{grid-template-columns:1fr}body .entry-choice{min-height:180px;padding:22px}body .entry-section{padding:36px 0;gap:24px}body .home-main p,body .entry-section .section-heading p{font-size:1rem}body .browser{display:none}body .canvas-legend{flex-wrap:wrap;max-width:90%}body .canvas-legend span{font-size:.75rem}}
+
+/* Put the decision point in reach and keep each section visually distinct. */
+body .hero{min-height:0;max-width:840px;padding:clamp(48px,8vh,96px) 0 clamp(44px,7vh,80px)}
+body .hero h1{font-size:clamp(2.25rem,4vw,3.25rem);line-height:1.3}
+body .hero-note{margin-bottom:24px}
+body .hero-foot{margin-top:20px}
+body .entry-section{min-height:0;padding:clamp(40px,6vh,72px) 0;justify-content:flex-start}
+body .entry-grid{border:0;gap:12px}
+body .entry-choice{min-height:210px;border:1px solid var(--border);border-radius:10px;background:var(--surface);transition:border-color .16s,transform .16s,box-shadow .16s}
+body .entry-choice:hover{border-color:var(--focus);transform:translateY(-2px);box-shadow:0 8px 24px rgba(31,31,29,.06)}
+body .entry-choice:active{transform:translateY(0)}
+body .how-section{padding:clamp(48px,7vh,80px) 0}
+@media(max-width:700px){body .hero{padding:42px 0 36px}body .hero h1{font-size:2rem}body .entry-grid{gap:10px}body .entry-choice{min-height:0}body .hero-links{flex-wrap:wrap;gap:12px 22px}}
+@media(prefers-reduced-motion:reduce){body .entry-choice{transition:none}body .entry-choice:hover{transform:none}}
+
+/* Keep account actions together, with the project name as the header anchor. */
+body .home-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
+body .home-header .wordmark{font-size:1rem;min-width:0}
+body #account-control[data-sync-issue="true"]{color:var(--risk);border:1px solid var(--risk);border-radius:6px;padding:6px 9px;background:var(--surface);font-weight:600}
+
+/* Acceptance and export details are regular working text, including on mobile. */
+body .pack-file,body .pack-file small,body .manual-decision,body .manual-decision p,
+body .inspector .pack-callout,body .inspector .pack-callout p{font-size:.875rem;line-height:1.6}
+body .inspector .acceptance-row .status-tag,body .inspector .acceptance-row footer button{font-size:.875rem}
+body .module-meta,body .module-boundary,body .node-kicker{font-size:.75rem}
+
+@media(max-width:700px){
+  body .home-header{gap:12px;padding-inline:20px}
+  body .home-header .wordmark{overflow:hidden;white-space:nowrap}
+  body .home-header .wordmark span{overflow:hidden;text-overflow:ellipsis}
+  body .home-actions{gap:6px}
+  body .admin-shortcut{display:none}
+  body .toolbar{height:auto;min-height:96px;flex-wrap:wrap;align-content:center;padding:6px 9px;gap:4px}
+  body .toolbar-right{order:1;flex:0 0 100%;justify-content:flex-end;min-width:0;min-height:34px}
+  body .toolbar-left{order:2;flex:0 0 100%;max-width:100%;min-height:38px;overflow-x:auto;overflow-y:hidden}
+  body .toolbar-right #account-control{font-size:.875rem;padding:5px 8px}
+  body .toolbar .icon-btn{width:36px;min-width:36px}
+  body .rail-item{font-size:.75rem}
+  body .canvas-layout{position:relative}
+  body .canvas-layout .inspector{left:0;right:0;top:0;bottom:0}
+  body .canvas-layout.full-detail-mode .inspector{position:relative}
+}

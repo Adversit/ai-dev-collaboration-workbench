@@ -8,6 +8,14 @@ test('grid placement resolves overlap and retains identity',()=>{const a={id:'a'
 test('focus includes incoming and outgoing neighbors only',()=>{assert.deepEqual([...C.neighbors('b',[{from:'a',to:'b'},{from:'b',to:'c'},{from:'c',to:'d'}])].sort(),['a','b','c']);});
 test('module validation rejects partial or malformed cards',()=>{assert.throws(()=>C.validateCard({name:'X'}));assert.throws(()=>C.validateCard({name:'X',what:'Y',why:'Z',intent:' '}));assert.throws(()=>C.validateCard({name:'X',what:'Y',why:'Z',intent:'I',risks:4}));assert.equal(C.validateCard({name:' X ',what:'Y',why:'Z',intent:'I'}).name,'X');});
 test('import rejects bad schema and non-finite coordinates',()=>{assert.equal(C.validateStore({schema:1,projects:[]}),false);assert.equal(C.validateStore({schema:2,projects:[{id:'p',nodes:[{id:'n',x:NaN,y:0}],edges:[]}]}),false);assert.equal(C.validateStore({schema:2,projects:[]}),true);});
+test('import rejects unsafe identifiers and markup-bearing status fields',()=>{
+  const project={id:'p',nodes:[{id:'n',x:0,y:0,type:'module',status:'draft'}],edges:[]};
+  assert.equal(C.validateStore({schema:3,projects:[project]}),true);
+  assert.equal(C.validateStore({schema:3,projects:[{...project,id:'p" onclick="alert(1)'}]}),false);
+  assert.equal(C.validateStore({schema:3,projects:[{...project,nodes:[{...project.nodes[0],status:'draft" onmouseover="alert(1)'}]}]}),false);
+  assert.equal(C.validateStore({schema:3,projects:[{...project,nodes:[{...project.nodes[0],acceptance:[{id:'a" onmouseover="alert(1)',status:'passed'}]}]}]}),false);
+  assert.equal(C.validateStore({schema:3,projects:[{...project,nodes:[{...project.nodes[0],acceptance:[{id:'a',kind:'<img src=x onerror=alert(1)>'}]}]}]}),false);
+});
 test('hierarchy accepts one container level and rejects nested containers',()=>{
   const p={schema:3,nodes:[{id:'root',type:'module',moduleLevel:'container',x:0,y:0},{id:'child',type:'module',moduleLevel:'leaf',parentId:'root',x:20,y:20,acceptance:[]}],edges:[]};
   assert.deepEqual(C.validateHierarchy(p),{valid:true});
