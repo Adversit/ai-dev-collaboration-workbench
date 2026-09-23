@@ -1,0 +1,31 @@
+/* Readable type at the browser's default zoom; canvas still supports spatial zoom. */
+html:root{font-size:16px}
+body .home-main{max-width:1440px;padding-inline:clamp(24px,5vw,72px)}
+body .home-main p,body .hero-note{font-size:1.125rem;line-height:1.8}
+body .home-main .eyebrow{font-size:.875rem}
+body .home-main h2{font-size:clamp(26px,2.3vw,34px);line-height:1.4}
+body .entry-section{box-sizing:border-box;min-height:calc(100svh - 80px);padding:clamp(32px,5vh,64px) 0;display:flex;flex-direction:column;justify-content:center;gap:28px;scroll-margin-top:24px}
+body .entry-section .section-heading{margin:0}
+body .entry-section .section-heading p{max-width:900px;font-size:1.125rem;margin-bottom:0}
+body .entry-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+body .entry-choice{min-height:220px;padding:24px;gap:12px}
+body .entry-choice strong{font-size:1.125rem;line-height:1.5}
+body .entry-choice span{font-size:1rem;line-height:1.65}
+body .entry-choice small{font-size:.8125rem}
+body .entry-choice em{font-size:.875rem;line-height:1.5;padding-top:16px;overflow-wrap:anywhere}
+body .entry-choice:focus-visible{outline:3px solid var(--focus);outline-offset:-3px}
+body .home-main .hero-links,body .home-main .text-button,body .home-method button{font-size:1rem}
+body .home-main .hero-foot,body .home-main footer,body .home-main .example-strip small{font-size:.875rem}
+body .browser{width:250px}
+body .browser button,body .browser p,body .toolbar select,body .toolbar .text-button,body .search-field input{font-size:.875rem}
+body .browser-footer,body #save-label,body .toolbar .meta,body .node-kicker{font-size:.75rem}
+body .rail-item{font-size:.75rem}
+body .inspector p,body .inspector .artifact-content,body .inspector .acceptance-row p,body .method-detail,body .artifact-row p{font-size:1rem;line-height:1.7}
+body .inspector h2,body .inspector .related-link,body .inspector .text-button,body .acceptance-row strong{font-size:1rem}
+body .inspector h1{font-size:1.75rem}
+body .status-tag,body .related-link small,body .acceptance-row .status-tag,body .acceptance-row footer button{font-size:.8125rem}
+body .page-body p,body .form-field,body dialog input,body dialog textarea,body dialog select,body .setting-row,body .method-detail dl{font-size:1rem}
+body .method-map strong{font-size:1rem}body .method-map span,body .method-detail dt,body .canvas-instructions,body .canvas-legend span{font-size:.875rem}
+body .toolbar-left{min-width:0;overflow-x:auto}body .toolbar-right{flex-shrink:0}
+@media(max-width:1100px){body .entry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body .entry-choice{min-height:190px}body .entry-section{min-height:auto}body .toolbar-right .stage-picker{display:none}}
+@media(max-width:700px){body .entry-grid{grid-template-columns:1fr}body .entry-choice{min-height:180px;padding:22px}body .entry-section{padding:36px 0;gap:24px}body .home-main p,body .entry-section .section-heading p{font-size:1rem}body .browser{display:none}body .canvas-legend{flex-wrap:wrap;max-width:90%}body .canvas-legend span{font-size:.75rem}}
